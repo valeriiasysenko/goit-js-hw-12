@@ -3,10 +3,10 @@ import SimpleLightbox from "simplelightbox";
 // Додатковий імпорт стилів
 import "simplelightbox/dist/simple-lightbox.min.css";
 
-export const gallery = document.querySelector(".gallery");
+const gallery = document.querySelector(".gallery");
 const loaderEl = document.querySelector(".js-loader");
-export const loadMore = document.querySelector(".js-btn-loadmore");
-console.log(loadMore);
+const loadMore = document.querySelector(".js-btn-loadmore");
+
 
 const lightbox = new SimpleLightbox('.gallery a', { 
     captionsData: "alt",

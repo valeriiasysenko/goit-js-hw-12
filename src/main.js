@@ -1,5 +1,5 @@
 import { getImagesByQuery } from "./js/pixabay-api.js";
-import { renderGallery, showLoader, hideLoader, clearGallery, hideLoadMoreButton, showLoadMoreButton, gallery, loadMore } from "./js/render-functions.js";
+import { renderGallery, showLoader, hideLoader, clearGallery, hideLoadMoreButton, showLoadMoreButton } from "./js/render-functions.js";
 
 import iziToast from "izitoast";
 // Додатковий імпорт стилів
@@ -9,6 +9,8 @@ import axios from "axios";
 
 const refs = {
     form: document.querySelector(".form"),
+    galleryList: document.querySelector(".gallery"),
+    loadMoreBtn: document.querySelector(".js-btn-loadmore"),
 }
 clearGallery();
 hideLoadMoreButton();
@@ -38,7 +40,7 @@ async function onSubmitHandler(event) {
     clearGallery();
     try {
         const res = await getImagesByQuery(query, page);
-        console.log(res);
+        hideLoader();
         if (res.hits.length === 0) {
             iziToast.show({
                 title: 'Error',
@@ -52,7 +54,9 @@ async function onSubmitHandler(event) {
     } catch {
         showError('Error', 'Something went wrong!');
     }
-    checkBtnStatus();
+    if (totalPages) {
+        checkBtnStatus();
+    }
     hideLoader();
     event.target.reset();
 }
@@ -75,24 +79,27 @@ function checkBtnStatus() {
     }
 }
 
-loadMore.addEventListener("click", async e => {
+refs.loadMoreBtn.addEventListener("click", async e => {
     page += 1;
     hideLoadMoreButton();
     try {
+        showLoader();
         const res = await getImagesByQuery(query, page);
         renderGallery(res.hits);
         scrollPage();
         // const markup = renderGallery(res.hits);
         // gallery.insertAdjacentHTML("beforeend", markup);
     } catch {
+        hideLoader();
         showError('Error', 'Something went wrong!');
     }
+    hideLoader();
     checkBtnStatus();
     
 })
 
 function scrollPage() {
-    const elem = gallery.lastElementChild;
+    const elem = refs.galleryList.lastElementChild;
     const height = elem.getBoundingClientRect().height;
 
     window.scrollBy({
