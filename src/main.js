@@ -5,8 +5,6 @@ import iziToast from "izitoast";
 // Додатковий імпорт стилів
 import "izitoast/dist/css/iziToast.min.css";
 
-import axios from "axios";
-
 const refs = {
     form: document.querySelector(".form"),
     galleryList: document.querySelector(".gallery"),
@@ -51,11 +49,11 @@ async function onSubmitHandler(event) {
        renderGallery(res.hits);
         // gallery.innerHTML = markup;
         totalPages = Math.ceil(res.totalHits / PER_PAGE);
+        if (totalPages) {
+            checkBtnStatus();
+        }
     } catch {
         showError('Error', 'Something went wrong!');
-    }
-    if (totalPages) {
-        checkBtnStatus();
     }
     hideLoader();
     event.target.reset();
